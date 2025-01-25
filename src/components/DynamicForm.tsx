@@ -17,12 +17,16 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import FormFieldRenderer from './FormFieldRenderer';
 
+type FormValues = {
+    [key: string]: string | number | boolean | string[] | File | { [key: string]: FormValues };
+};
+
 const DynamicForm: React.FC = () => {
     const [form] = Form.useForm();
     const formSchema = useSelector((state: RootState) => state.formSchema);
 
     // Function to handle form submission
-    const onFinish = (values: any) => {
+    const onFinish = (values: FormValues) => {
         message.success('Form submitted successfully!');
         console.log('Submitted values:', values);
     };
