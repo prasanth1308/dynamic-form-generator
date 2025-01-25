@@ -18,11 +18,19 @@ interface ThemeState {
   mode: ThemeMode;
 }
 
+// Function to get the system theme (light or dark)
 const getSystemTheme = (): 'light' | 'dark' => 
   window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
+// Function to get the saved theme mode from local storage
+const getSavedThemeMode = (): ThemeMode => {
+  const savedMode = localStorage.getItem('themeMode') as ThemeMode | null;
+  return savedMode || 'system';
+};
+
+// Initial state with the saved theme mode or default to 'system'
 const initialState: ThemeState = {
-  mode: 'system'
+  mode: getSavedThemeMode()
 };
 
 const themeSlice = createSlice({
@@ -31,6 +39,10 @@ const themeSlice = createSlice({
   reducers: {
     setThemeMode: (state, action: PayloadAction<ThemeMode>) => {
       state.mode = action.payload;
+      localStorage.setItem('themeMode', action.payload); // Save the theme mode to local storage
+    },
+    getSystemTheme: (state) => {
+      state.mode = getSystemTheme();
     }
   }
 });

@@ -26,6 +26,27 @@ export interface FieldOption {
     label: string; // Display label of the option
 }
 
+export enum ConditionType {
+    EQUALS = 'equals',
+    NOT_EQUALS = 'not_equals',
+    IN = 'in',
+    NOT_IN = 'not_in',
+    GT = 'greater_than',
+    LT = 'less_than',
+    CONTAINS = 'contains',
+    EMPTY = 'empty',
+    NOT_EMPTY = 'not_empty'
+}
+
+export type Visibility = 'show' | 'hide';
+
+export interface ConditionalRule {
+    sourceField: string;
+    conditionType: ConditionType;
+    sourceValue: any;
+    visibility: Visibility;
+}
+
 // Interface for individual form fields
 export interface FormField {
     id: string; // Unique identifier for the field
@@ -35,6 +56,7 @@ export interface FormField {
     placeholder?: string; // Placeholder text for the field
     validation?: ValidationRules; // Validation rules for the field
     options?: FieldOption[]; // Options for fields like radio buttons and checkboxes
+    conditionalRules?: ConditionalRule[]; // Conditional rules for field visibility
 }
 
 // Interface for the overall form schema
