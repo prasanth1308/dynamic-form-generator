@@ -29,8 +29,6 @@ export interface FieldOption {
 export enum ConditionType {
     EQUALS = 'equals',
     NOT_EQUALS = 'not_equals',
-    GREATER_THAN = 'greater_than',
-    LESS_THAN = 'less_than',
     IN = 'in',
     NOT_IN = 'not_in',
     GT = 'greater_than',
