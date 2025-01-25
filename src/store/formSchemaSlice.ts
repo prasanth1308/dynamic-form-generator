@@ -98,7 +98,7 @@ const formSchemaSlice = createSlice({
   name: 'formSchema',
   initialState,
   reducers: {
-    updateFormSchema: (state, action: PayloadAction<FormSchema>) => {
+    updateFormSchema: (_state, action: PayloadAction<FormSchema>) => {
       return action.payload;
     },
     resetFormSchema: () => initialState

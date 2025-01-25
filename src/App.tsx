@@ -58,8 +58,7 @@ const App: React.FC = () => {
         algorithm: getThemeAlgorithm(),
         components: {
           Layout: {
-            headerBackground: getThemeAlgorithm() === darkAlgorithm ? '#001529' : '#f0f2f5',
-            footerBackground: getThemeAlgorithm() === darkAlgorithm ? '#001529' : '#f0f2f5'
+            headerBg: getThemeAlgorithm() === darkAlgorithm ? '#001529' : '#f0f2f5'
           }
         }
       }}

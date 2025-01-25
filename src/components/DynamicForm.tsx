@@ -52,7 +52,6 @@ const DynamicForm: React.FC = () => {
                     <FormFieldRenderer
                         key={field.id}
                         field={field}
-                        form={form}
                     />
                 ))}
 
