@@ -1,3 +1,15 @@
+/**
+ * Project: Dynamic Form Generator
+ * File: eslint.config.js
+ * Description: Configuration file for ESLint, a tool for identifying and reporting on patterns in JavaScript.
+ * Author: Prasanth Ravi
+ * Created On: January 24, 2025
+ * Version: 1.0.0
+ *
+ * License: Unlicensed
+ * Note: This configuration sets up ESLint to work with a React and TypeScript project.
+ */
+
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
