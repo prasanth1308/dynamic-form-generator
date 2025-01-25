@@ -12,7 +12,10 @@
  */
 
 import React from 'react';
-import { Modal, Tabs, Button } from 'antd';
+import { Modal, Tabs, Button, theme, message } from 'antd';
+import { DownloadOutlined, CopyOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 const { TabPane } = Tabs;
 
@@ -22,16 +25,18 @@ interface SubmissionModalProps {
   onClose: () => void;
 }
 
-const SubmissionModal: React.FC<SubmissionModalProps> = ({ 
-  visible, 
-  formData, 
-  onClose 
+const SubmissionModal: React.FC<SubmissionModalProps> = ({
+  visible,
+  formData,
+  onClose
 }) => {
+  const { token } = theme.useToken();
+  const themeMode = useSelector((state: RootState) => state.theme.mode);
+
   const handleDownload = () => {
     const jsonString = JSON.stringify(formData, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    
     const link = document.createElement('a');
     link.href = url;
     link.download = 'form_submission.json';
@@ -40,13 +45,19 @@ const SubmissionModal: React.FC<SubmissionModalProps> = ({
     document.body.removeChild(link);
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(JSON.stringify(formData, null, 2));
+    message.success('Form data cpoied successfully!');
+  };
+
   const renderJsonPreview = () => (
-    <pre style={{ 
-      backgroundColor: '#f4f4f4', 
-      padding: '10px', 
-      borderRadius: '4px', 
-      maxHeight: '400px', 
-      overflowY: 'auto' 
+    <pre style={{
+      backgroundColor: themeMode === 'dark' ? '#141414' : '#f4f4f4',
+      padding: '10px',
+      borderRadius: '4px',
+      maxHeight: '400px',
+      overflowY: 'auto',
+      color: token.colorText
     }}>
       {JSON.stringify(formData, null, 2)}
     </pre>
@@ -66,11 +77,14 @@ const SubmissionModal: React.FC<SubmissionModalProps> = ({
   return (
     <Modal
       title="Form Submission Details"
-      visible={visible}
+      open={visible}
       onCancel={onClose}
       width={600}
       footer={[
-        <Button key="download" type="primary" onClick={handleDownload}>
+        <Button key="copy" icon={<CopyOutlined />} onClick={handleCopy}>
+          Copy JSON
+        </Button>,
+        <Button key="download" icon={<DownloadOutlined />} onClick={handleDownload}>
           Download JSON
         </Button>,
         <Button key="close" onClick={onClose}>
