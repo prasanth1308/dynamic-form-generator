@@ -12,111 +12,93 @@
  */
 
 import React, { useState } from 'react';
-import { Input, Card } from 'antd';
+import { Input, Card, Button, message, Space } from 'antd';
 import { FormSchema } from '../types/FormSchema';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { updateFormSchema } from '../store/formSchemaSlice';
+import { FileAddOutlined, DownloadOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
-interface JSONSchemaEditorProps {
-  onSchemaChange: (schema: FormSchema) => void;
-}
-
-const JSONSchemaEditor: React.FC<JSONSchemaEditorProps> = ({ onSchemaChange }) => {
+const JSONSchemaEditor: React.FC = () => {
   // State to hold the JSON input as a string
-  const [jsonInput, setJsonInput] = useState<string>(JSON.stringify({
-    formTitle: "User Registration Form",
-    formDescription: "Please fill out the form to register.",
-    fields: [
-      {
-        id: "username",
-        type: "text",
-        label: "Username",
-        required: true,
-        placeholder: "Enter your username",
-        validation: {
-          minLength: 3,
-          maxLength: 20
-        }
-      },
-      {
-        id: "email",
-        label: "Email Address",
-        type: "email",
-        required: true,
-        placeholder: "Enter your email",
-        validation: {
-          pattern: "^[\\w\\s@]+@[\\w\\s@]+\\.[\\w\\s@]+$",
-          message: "Please enter a valid email address"
-        }
-      },
-      {
-        id: "password",
-        type: "password",
-        label: "Password",
-        required: true,
-        placeholder: "Enter a secure password",
-        validation: {
-          minLength: 8,
-          message: "Password must be at least 8 characters long"
-        }
-      },
-      {
-        id: "dob",
-        type: "date",
-        label: "Date of Birth",
-        required: false
-      },
-      {
-        id: "gender",
-        type: "radio",
-        label: "Gender",
-        required: true,
-        options: [
-          { value: "male", label: "Male" },
-          { value: "female", label: "Female" },
-          { value: "other", label: "Other" }
-        ]
-      },
-      {
-        id: "hobbies",
-        type: "checkbox",
-        label: "Hobbies",
-        required: false,
-        options: [
-          { value: "reading", label: "Reading" },
-          { value: "traveling", label: "Traveling" },
-          { value: "sports", label: "Sports" }
-        ]
-      },
-      {
-        id: "bio",
-        type: "textarea",
-        label: "Short Bio",
-        required: false,
-        placeholder: "Tell us about yourself..."
-      },
-      {
-        id: "profilePicture",
-        type: "file",
-        label: "Upload Profile Picture",
-        required: false
-      }
-    ]
-  }, null, 2)); // Initial JSON input with pretty print
+  const dispatch = useDispatch();
+  const currentSchema = useSelector((state: RootState) => state.formSchema);
+  const [jsonInput, setJsonInput] = useState<string>(
+    JSON.stringify(currentSchema, null, 2)
+  ); // Initial JSON input with pretty print
 
   // Function to handle changes in the JSON input
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setJsonInput(e.target.value);
+    const value = e.target.value;
+    setJsonInput(value);
     try {
-      const parsedSchema = JSON.parse(e.target.value);
-      onSchemaChange(parsedSchema);
+      const parsedSchema: FormSchema = JSON.parse(value);
+      dispatch(updateFormSchema(parsedSchema));
     } catch (error) {
-      console.error('Invalid JSON:', error);
+      console.error("Invalid JSON schema", error);
+    }
+  };
+
+  // Function to handle exporting the JSON schema
+  const handleExport = () => {
+    const blob = new Blob([jsonInput], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'form-schema.json';
+    link.click();
+    message.success('Schema exported successfully');
+  };
+
+  // Function to handle importing a JSON file
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const importedSchema = JSON.parse(event.target?.result as string);
+          dispatch(updateFormSchema(importedSchema));
+          setJsonInput(JSON.stringify(importedSchema, null, 2));
+          message.success('Schema imported successfully');
+        } catch (error) {
+          console.error('Invalid JSON file', error);
+          message.error('Invalid JSON file');
+        }
+      };
+      reader.readAsText(file);
     }
   };
 
   return (
-    <Card title="JSON Schema Editor">
+    <Card
+      title="JSON Schema Editor"
+      extra={
+        <Space>
+          <Button
+            icon={<DownloadOutlined />}
+            onClick={handleExport}
+          >
+            Export
+          </Button>
+          <Button
+            icon={<FileAddOutlined />}
+            onClick={() => document.getElementById('file-import')?.click()}
+          >
+            Import
+          </Button>
+          <input
+            type="file"
+            id="file-import"
+            accept=".json"
+            style={{ display: 'none' }}
+            onChange={handleImport}
+          />
+        </Space>
+      }
+      style={{ height: '100%', overflowY: 'auto' }}
+    >
       <TextArea
         rows={20}
         value={jsonInput}

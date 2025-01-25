@@ -31,11 +31,10 @@ const { Option } = Select;
 // Props interface for the FormFieldRenderer component
 interface FormFieldRendererProps {
   field: FormField;
-  form: any;
 }
 
 // Component to render individual form fields based on the provided schema
-const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({ field, form }) => {
+const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({ field }) => {
   const rules = [
     {
       required: field.required,

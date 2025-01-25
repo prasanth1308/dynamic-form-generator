@@ -10,133 +10,96 @@
  * Note: This file sets up the main layout and integrates the JSON schema editor and dynamic form components.
  */
 
-import React, { useState } from 'react';
-import { Layout, Row, Col } from 'antd';
+import React, { useEffect } from 'react';
+import { Layout, Row, Col, ConfigProvider, theme } from 'antd';
+import { UserOutlined } from "@ant-design/icons";
 import JSONSchemaEditor from './components/JSONSchemaEditor';
 import DynamicForm from './components/DynamicForm';
-import { FormSchema } from './types/FormSchema';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from './store';
+import { setThemeMode, getSystemTheme } from './store/themeSlice';
+import ThemeSwitcher from './components/ThemeSwitcher';
 import './index.css';
 
 const { Header, Content, Footer } = Layout;
+const { darkAlgorithm, defaultAlgorithm } = theme;
 
 const App: React.FC = () => {
 
-  const [formSchema, setFormSchema] = useState<FormSchema>({
-    "formTitle": "User Registration Form",
-    "formDescription": "Please fill out the form to register.",
-    "fields": [
-      {
-        "id": "username",
-        "type": "text",
-        "label": "Username",
-        "required": true,
-        "placeholder": "Enter your username",
-        "validation": {
-          "minLength": 3,
-          "maxLength": 20
-        }
-      },
-      {
-        "id": "email",
-        "label": "Email Address",
-        "type": "email",
-        "required": true,
-        "placeholder": "Enter your email",
-        "validation": {
-          "pattern": "^[\\w\\s@]+@[\\w\\s@]+\\.[\\w\\s@]+$",
-          "message": "Please enter a valid email address"
-        }
-      },
-      {
-        "id": "password",
-        "type": "password",
-        "label": "Password",
-        "required": true,
-        "placeholder": "Enter a secure password",
-        "validation": {
-          "minLength": 8,
-          "message": "Password must be at least 8 characters long"
-        }
-      },
-      {
-        "id": "dob",
-        "type": "date",
-        "label": "Date of Birth",
-        "required": false
-      },
-      {
-        "id": "gender",
-        "type": "radio",
-        "label": "Gender",
-        "required": true,
-        "options": [
-          { "value": "male", "label": "Male" },
-          { "value": "female", "label": "Female" },
-          { "value": "other", "label": "Other" }
-        ]
-      },
-      {
-        "id": "hobbies",
-        "type": "checkbox",
-        "label": "Hobbies",
-        "required": false,
-        "options": [
-          { "value": "reading", "label": "Reading" },
-          { "value": "traveling", "label": "Traveling" },
-          { "value": "sports", "label": "Sports" }
-        ]
-      },
-      {
-        "id": "bio",
-        "type": "textarea",
-        "label": "Short Bio",
-        "required": false,
-        "placeholder": "Tell us about yourself..."
-      },
-      {
-        "id": "profilePicture",
-        "type": "file",
-        "label": "Upload Profile Picture",
-        "required": false
-      }
-    ]
-  }
-  );
+  const themeMode = useSelector((state: RootState) => state.theme.mode);
+  const dispatch = useDispatch();
 
-  const handleSchemaChange = (schema: FormSchema) => {
-    setFormSchema(schema);
+  useEffect(() => {
+    const systemThemeListener = (e: MediaQueryListEvent) => {
+      if (themeMode === 'system') {
+        dispatch(setThemeMode(e.matches ? 'dark' : 'light'));
+      }
+    };
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', systemThemeListener);
+
+    return () => {
+      mediaQuery.removeEventListener('change', systemThemeListener);
+    };
+  }, [themeMode, dispatch]);
+
+  const getThemeAlgorithm = () => {
+    if (themeMode === 'dark' || (themeMode === 'system' && getSystemTheme() === 'dark')) {
+      return darkAlgorithm;
+    }
+    return defaultAlgorithm;
   };
 
+
   return (
-    <Layout>
-      <Header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          backgroundColor: '#001529',
-          color: 'white',
-          height: 64,
-        }}>
-        Dynamic Form Generator
-      </Header>
-      <Content style={{ padding: "0 48px", minHeight: "calc(100vh - 134px)" }}>
-        <Row gutter={16}>
-          <Col span={8}>
-            <JSONSchemaEditor onSchemaChange={handleSchemaChange} />
-          </Col>
-          <Col span={16}>
-            <DynamicForm schema={formSchema} />
-          </Col>
-        </Row>
-      </Content>
-      <Footer style={{ textAlign: "center", height: 64 }}>
-        Dynamic Form Generator ©{new Date().getFullYear()}
-      </Footer>
-    </Layout>
+    <ConfigProvider
+      theme={{
+        algorithm: getThemeAlgorithm(),
+        components: {
+          Layout: {
+            headerBackground: getThemeAlgorithm() === darkAlgorithm ? '#001529' : '#f0f2f5',
+            footerBackground: getThemeAlgorithm() === darkAlgorithm ? '#001529' : '#f0f2f5'
+          }
+        }
+      }}
+    >
+      <Layout>
+        <Header
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            position: "sticky",
+            top: 0,
+            zIndex: 1,
+            width: "100%",
+            backgroundColor: '#001529',
+            color: 'white',
+            height: 64,
+          }}>
+          <div style={{ color: "white", fontSize: "20px" }}>Dynamic Form Generator</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <ThemeSwitcher />
+            <div style={{ color: "white" }}>Welcome, User</div>
+            <UserOutlined style={{ color: "white", fontSize: "20px" }} />
+          </div>
+        </Header>
+        <Content style={{ padding: "24px", minHeight: "calc(100vh - 134px)" }}>
+          <Row gutter={16}>
+            <Col span={8}>
+              <JSONSchemaEditor />
+            </Col>
+            <Col span={16}>
+              <DynamicForm />
+            </Col>
+          </Row>
+        </Content>
+        <Footer style={{ textAlign: "center", height: 64 }}>
+          Dynamic Form Generator ©{new Date().getFullYear()}
+        </Footer>
+      </Layout>
+    </ConfigProvider>
   );
 };
 

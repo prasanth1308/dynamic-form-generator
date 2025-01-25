@@ -29,7 +29,7 @@ export interface FieldOption {
 // Interface for individual form fields
 export interface FormField {
     id: string; // Unique identifier for the field
-    type: string; // Type of the field (e.g., text, email, password)
+    type: 'text' | 'email' | 'password' | 'number' | 'date' | 'select' | 'radio' | 'checkbox' | 'textarea' | 'file'; // Type of the field (e.g., text, email, password)
     label: string; // Label for the field
     required?: boolean; // Indicates if the field is required
     placeholder?: string; // Placeholder text for the field
