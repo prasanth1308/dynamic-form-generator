@@ -11,7 +11,7 @@
  *       a dynamic form generator using React, Redux, and TypeScript.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Card, Button, message } from 'antd';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
@@ -23,7 +23,12 @@ type FormValues = {
 
 const DynamicForm: React.FC = () => {
     const [form] = Form.useForm();
+    const [formValues, setFormValues] = useState<Record<string, any>>({});
     const formSchema = useSelector((state: RootState) => state.formSchema);
+
+    const handleValuesChange = (_changedValues: any, allValues: any) => {
+        setFormValues(allValues);
+    };
 
     // Function to handle form submission
     const onFinish = (values: FormValues) => {
@@ -47,11 +52,13 @@ const DynamicForm: React.FC = () => {
                 layout="vertical"
                 onFinish={onFinish}
                 autoComplete="off"
+                onValuesChange={handleValuesChange}
             >
                 {formSchema.fields.map(field => (
                     <FormFieldRenderer
                         key={field.id}
                         field={field}
+                        formValues={formValues}
                     />
                 ))}
 

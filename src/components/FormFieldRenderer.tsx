@@ -24,6 +24,7 @@ import {
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { FormField } from '../types/FormSchema';
+import { shouldShowField } from '../utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -31,10 +32,15 @@ const { Option } = Select;
 // Props interface for the FormFieldRenderer component
 interface FormFieldRendererProps {
   field: FormField;
+  formValues: Record<string, any>;
 }
 
 // Component to render individual form fields based on the provided schema
-const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({ field }) => {
+const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({ field, formValues }) => {
+  const isVisible = shouldShowField(field.conditionalRules || [], formValues);
+
+  if (!isVisible) return null;
+
   const rules = [
     {
       required: field.required,
