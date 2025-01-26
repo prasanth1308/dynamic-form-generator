@@ -91,7 +91,8 @@ const initialState: FormSchema = {
       label: "Upload Profile Picture",
       required: false
     }
-  ]
+  ],
+  error: null
 };
 
 const formSchemaSlice = createSlice({
@@ -101,9 +102,12 @@ const formSchemaSlice = createSlice({
     updateFormSchema: (_state, action: PayloadAction<FormSchema>) => {
       return action.payload;
     },
-    resetFormSchema: () => initialState
+    resetFormSchema: () => initialState,
+    setSchemaError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
+    }
   }
 });
 
-export const { updateFormSchema, resetFormSchema } = formSchemaSlice.actions;
+export const { updateFormSchema, resetFormSchema, setSchemaError } = formSchemaSlice.actions;
 export default formSchemaSlice.reducer;

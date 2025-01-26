@@ -64,4 +64,5 @@ export interface FormSchema {
     formTitle: string; // Title of the form
     formDescription?: string; // Description of the form
     fields: FormField[]; // Array of form fields
+    error: null | string; // Error message for the form
 }
