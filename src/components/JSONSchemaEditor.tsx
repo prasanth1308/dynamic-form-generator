@@ -35,6 +35,12 @@ const JSONSchemaEditor: React.FC = () => {
     setJsonInput(value);
     try {
       const parsedSchema: FormSchema = JSON.parse(value);
+
+      // Validate schema structure
+      if (!parsedSchema.fields || !Array.isArray(parsedSchema.fields)) {
+        throw new Error('Invalid schema: fields must be an array');
+      }
+
       // Clear any previous errors
       dispatch(setSchemaError(null));
       dispatch(updateFormSchema(parsedSchema));
@@ -63,6 +69,13 @@ const JSONSchemaEditor: React.FC = () => {
       reader.onload = (event) => {
         try {
           const importedSchema = JSON.parse(event.target?.result as string);
+
+          // Validate schema structure
+          if (!importedSchema.fields || !Array.isArray(importedSchema.fields)) {
+            dispatch(setSchemaError('Invalid schema: fields must be an array'));
+            throw new Error('Invalid schema: fields must be an array');
+          }
+
           // Clear any previous errors
           dispatch(setSchemaError(null));
           dispatch(updateFormSchema(importedSchema));
