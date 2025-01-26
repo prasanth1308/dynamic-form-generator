@@ -77,7 +77,7 @@ const DynamicForm: React.FC = () => {
                     autoComplete="off"
                     onValuesChange={handleValuesChange}
                 >
-                    {formSchema.fields.map(field => (
+                    {formSchema?.fields?.map(field => (
                         <FormFieldRenderer
                             key={field.id}
                             field={field}
