@@ -16,7 +16,7 @@ import { Input, Card, Button, message, Space } from 'antd';
 import { FormSchema } from '../types/FormSchema';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { updateFormSchema } from '../store/formSchemaSlice';
+import { updateFormSchema, setSchemaError } from '../store/formSchemaSlice';
 import { FileAddOutlined, DownloadOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
@@ -35,8 +35,12 @@ const JSONSchemaEditor: React.FC = () => {
     setJsonInput(value);
     try {
       const parsedSchema: FormSchema = JSON.parse(value);
+      // Clear any previous errors
+      dispatch(setSchemaError(null));
       dispatch(updateFormSchema(parsedSchema));
     } catch (error) {
+      // Dispatch error to global state
+      dispatch(setSchemaError(error instanceof Error ? error.message : 'Unknown parsing error'));
       console.error("Invalid JSON schema", error);
     }
   };
@@ -59,11 +63,14 @@ const JSONSchemaEditor: React.FC = () => {
       reader.onload = (event) => {
         try {
           const importedSchema = JSON.parse(event.target?.result as string);
+          // Clear any previous errors
+          dispatch(setSchemaError(null));
           dispatch(updateFormSchema(importedSchema));
           setJsonInput(JSON.stringify(importedSchema, null, 2));
           message.success('Schema imported successfully');
         } catch (error) {
-          console.error('Invalid JSON file', error);
+          // Dispatch error to global state
+          dispatch(setSchemaError(error instanceof Error ? error.message : 'Unknown parsing error'));
           message.error('Invalid JSON file');
         }
       };
@@ -104,6 +111,7 @@ const JSONSchemaEditor: React.FC = () => {
         value={jsonInput}
         onChange={handleInputChange}
         placeholder="Edit JSON schema here"
+        status={currentSchema.error ? "error" : ""}
       />
     </Card>
   );

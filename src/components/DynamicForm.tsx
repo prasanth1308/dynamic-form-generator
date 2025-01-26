@@ -12,7 +12,7 @@
  */
 
 import React, { useState } from 'react';
-import { Form, Card, Button, message } from 'antd';
+import { Form, Card, Button, message, Alert } from 'antd';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import FormFieldRenderer from './FormFieldRenderer';
@@ -48,6 +48,23 @@ const DynamicForm: React.FC = () => {
 
     return (
         <>
+          {formSchema.error && (
+                <div style={{ 
+                    position: 'absolute', 
+                    top: '50%', 
+                    left: '50%', 
+                    transform: 'translate(-50%, -50%)', 
+                    zIndex: 10 
+                }}>
+                    <Alert
+                        message="Schema Error"
+                        description={formSchema.error}
+                        type="error"
+                        showIcon={false}
+                        closable={false}
+                    />
+                </div>
+            )}
             <Card
                 title={formSchema.formTitle}
                 extra={formSchema.formDescription}
