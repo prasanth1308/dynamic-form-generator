@@ -12,7 +12,7 @@
 
 import { ConditionType, ConditionalRule } from './types/FormSchema';
 
-const evaluateCondition = (
+export const evaluateCondition = (
     conditionType: ConditionType,
     actualValue: any,
     expectedValue: any
