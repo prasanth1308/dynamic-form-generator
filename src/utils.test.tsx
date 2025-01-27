@@ -1,3 +1,15 @@
+/**
+ * Project: Dynamic Form Generator
+ * File: utils.test.tsx
+ * Description: Test file for evaluateCondition function.
+ * Author: Prasanth Ravi
+ * Created On: January 27, 2025
+ * Version: 1.0.0
+ *
+ * License: Unlicensed
+ * Note: This configuration sets up Vite to work with a React project.
+ */
+
 import { describe, it, expect } from 'vitest';
 import { evaluateCondition } from './utils';
 import { ConditionType } from './types/FormSchema';

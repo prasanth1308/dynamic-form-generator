@@ -1,3 +1,15 @@
+/**
+ * Project: Dynamic Form Generator
+ * File: main.test.tsx
+ * Description: Test file for main.tsx.
+ * Author: Prasanth Ravi
+ * Created On: January 27, 2025
+ * Version: 1.0.0
+ *
+ * License: Unlicensed
+ * Note: This configuration sets up Vite to work with a React project.
+ */
+
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import ReactDOM from 'react-dom/client';
 
