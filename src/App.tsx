@@ -86,10 +86,10 @@ const App: React.FC = () => {
         </Header>
         <Content style={{ padding: "24px", minHeight: "calc(100vh - 134px)" }}>
           <Row gutter={16}>
-            <Col span={8}>
+            <Col span={12}>
               <JSONSchemaEditor />
             </Col>
-            <Col span={16}>
+            <Col span={12}>
               <DynamicForm />
             </Col>
           </Row>

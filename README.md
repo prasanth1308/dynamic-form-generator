@@ -30,10 +30,6 @@ Dynamic Form Generator is a versatile tool built with React, TypeScript, Redux, 
 - **Data Submission**: Submit form data and view it in a modal with options to copy or download the data in JSON format.
 - **Responsive Design**: Ensure usability across different device sizes.
 
-## Demo
-
-https://dynamic-form-generator-amber.vercel.app/
-
 ## Getting Started
 
 Follow these instructions to set up and run the project on your local machine.
@@ -166,6 +162,236 @@ No tests have been implemented for this project.
 - **Ant Design**: UI library for React, providing pre-designed components.
 - **Vite**: Build tool for faster development experience.
 - **ESLint**: Linting tool to maintain code quality.
+
+
+## Demo
+
+https://dynamic-form-generator-amber.vercel.app/
+
+
+## Usage/Examples
+
+<details>
+  <summary>Sample case 1</summary>
+
+  ### JSON input with all input types
+  ```js
+   {
+   "formTitle": "User Registration Form",
+   "formDescription": "Please fill out the form to register.",
+   "fields": [
+      {
+         "id": "username",
+         "type": "text",
+         "label": "Username",
+         "required": true,
+         "placeholder": "Enter your username",
+         "validation": {
+         "minLength": 3,
+         "maxLength": 20
+         }
+      },
+      {
+         "id": "email",
+         "label": "Email Address",
+         "type": "email",
+         "required": true,
+         "placeholder": "Enter your email",
+         "validation": {
+         "pattern": "^[\\w\\s@]+@[\\w\\s@]+\\.[\\w\\s@]+$",
+         "message": "Please enter a valid email address"
+         }
+      },
+      {
+         "id": "password",
+         "type": "password",
+         "label": "Password",
+         "required": true,
+         "placeholder": "Enter a secure password",
+         "validation": {
+         "minLength": 8,
+         "message": "Password must be at least 8 characters long"
+         }
+      },
+      {
+         "id": "dob",
+         "type": "date",
+         "label": "Date of Birth",
+         "required": false
+      },
+      {
+         "id": "gender",
+         "type": "radio",
+         "label": "Gender",
+         "required": true,
+         "options": [
+         {
+            "value": "male",
+            "label": "Male"
+         },
+         {
+            "value": "female",
+            "label": "Female"
+         },
+         {
+            "value": "other",
+            "label": "Other"
+         }
+         ]
+      },
+      {
+         "id": "hobbies",
+         "type": "checkbox",
+         "label": "Hobbies",
+         "required": false,
+         "options": [
+         {
+            "value": "reading",
+            "label": "Reading"
+         },
+         {
+            "value": "traveling",
+            "label": "Traveling"
+         },
+         {
+            "value": "sports",
+            "label": "Sports"
+         }
+         ]
+      },
+      {
+         "id": "bio",
+         "type": "textarea",
+         "label": "Short Bio",
+         "required": false,
+         "placeholder": "Tell us about yourself..."
+      },
+      {
+         "id": "profilePicture",
+         "type": "file",
+         "label": "Upload Profile Picture",
+         "required": false
+      }
+   ],
+   }
+  ```
+</details>
+
+<details>
+  <summary>Sample case 2</summary>
+
+  ### JSON input with all conditional rendering
+  ```js
+   {
+   "formTitle": "Advanced Registration Form",
+   "formDescription": "Demonstrate advanced conditional rendering",
+   "fields": [
+      {
+         "id": "age",
+         "type": "number",
+         "label": "Age",
+         "required": true
+      },
+      {
+         "id": "occupation",
+         "type": "select",
+         "label": "Occupation",
+         "required": true,
+         "options": [
+         {
+            "value": "student",
+            "label": "Student"
+         },
+         {
+            "value": "employed",
+            "label": "Employed"
+         },
+         {
+            "value": "unemployed",
+            "label": "Unemployed"
+         }
+         ]
+      },
+      {
+         "id": "studentDetails",
+         "type": "text",
+         "label": "Educational Institution",
+         "required": false,
+         "conditionalRules": [
+         {
+            "sourceField": "occupation",
+            "conditionType": "equals",
+            "sourceValue": "student",
+            "visibility": "show"
+         }
+         ]
+      },
+      {
+         "id": "employerDetails",
+         "type": "text",
+         "label": "Employer Name",
+         "required": false,
+         "conditionalRules": [
+         {
+            "sourceField": "occupation",
+            "conditionType": "equals",
+            "sourceValue": "employed",
+            "visibility": "show"
+         }
+         ]
+      },
+      {
+         "id": "seniorDiscounts",
+         "type": "checkbox",
+         "label": "Senior Discounts",
+         "required": false,
+         "options": [
+         {
+            "value": "medical",
+            "label": "Medical Discount"
+         },
+         {
+            "value": "travel",
+            "label": "Travel Discount"
+         }
+         ],
+         "conditionalRules": [
+         {
+            "sourceField": "age",
+            "conditionType": "greater_than",
+            "sourceValue": 60,
+            "visibility": "show"
+         }
+         ]
+      },
+      {
+         "id": "youthPrograms",
+         "type": "checkbox",
+         "label": "Youth Programs",
+         "required": false,
+         "options": [
+         {
+            "value": "education",
+            "label": "Educational Programs"
+         },
+         {
+            "value": "sports",
+            "label": "Sports Programs"
+         }
+         ],
+         "conditionalRules": [
+         {
+            "sourceField": "age",
+            "conditionType": "less_than",
+            "sourceValue": 25,
+            "visibility": "show"
+         }
+         ]
+      }
+   ]
+   }
+  ```
+</details>
 
 ## Author
 
