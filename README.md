@@ -15,6 +15,8 @@
 - [Assumptions](#assumptions)
 - [Limitations](#limitations)
 - [Technologies Used](#technologies-used)
+- [Demo](#demo)
+- [Usage/Examples](#usage/examples)
 - [Author](#author)
 
 ## Overview
@@ -163,11 +165,9 @@ No tests have been implemented for this project.
 - **Vite**: Build tool for faster development experience.
 - **ESLint**: Linting tool to maintain code quality.
 
-
 ## Demo
 
 https://dynamic-form-generator-amber.vercel.app/
-
 
 ## Usage/Examples
 
